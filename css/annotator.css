@@ -24,11 +24,6 @@
 /* Images
 -------------------------------------------------------------------- */
 
-.annotator-adder {
-	background-image: url(../img/annotator-icon-sprite.png?embed);
-	background-repeat: no-repeat;
-}
-
 .annotator-resize,
 .annotator-widget:after,
 .annotator-editor a:after,
@@ -92,11 +87,10 @@
 -------------------------------------------------------------------- */
 
 .annotator-adder {
-	margin-top: -48px;
-	margin-left: -24px;
-	width: 48px;
+	width: 120px;
 	height: 48px;
-	background-position: left top;
+	right: 10px;
+	bottom: 10px;
 }
 
 .annotator-adder:hover {
@@ -109,13 +103,11 @@
 
 .annotator-adder button {
 	display: block;
-	width: 36px;
-	height: 41px;
-	margin: 0 auto;
+	width: 100%;
+	height: 100%;
 	border: none;
-	background: none;
-	text-indent: -999em;
-	cursor: pointer;
+	background: 0 0;
+	cursor: pointer
 }
 
 /* Annotator Widget
@@ -447,10 +439,13 @@
 	bottom: 55px;
 }
 .annotator-adder{
-width: 48px;
-height: 48px;
-right: 10px;
-bottom: 0px;
+	width: 120px;
+	height: 48px;
+	right: 10px;
+	bottom: 10px;
+}
+.annotator-adder button{
+	color: white;
 }
 .annotator-editor a,
 .annotator-filter .annotator-filter-property label {

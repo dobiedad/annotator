@@ -41,7 +41,7 @@ function TextSelector(element, options) {
           clearTimeout(selectionEndTimeout);
           selectionEndTimeout = setTimeout(function () {
             self._checkForEndSelection(e);
-          }, 1000);
+          }, 500);
       }
 
           // .on("selectionchange", function (e) {

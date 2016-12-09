@@ -1,3 +1,4 @@
+/* global window */
 "use strict";
 
 var Widget = require('./widget').Widget,
@@ -83,6 +84,9 @@ var Viewer = exports.Viewer = Widget.extend({
         this.mouseDown = false;
         this.render = function (annotation) {
             if (annotation.text) {
+              if(options.model){
+                model.speak(annotation.text)
+              }
                 return util.escapeHtml(annotation.text);
             } else {
                 return "<i>" + _t('No comment') + "</i>";
@@ -111,58 +115,48 @@ var Viewer = exports.Viewer = Widget.extend({
         if (typeof this.options.permitDelete !== 'function') {
             throw new TypeError("permitDelete callback must be a function");
         }
-        var show = false;
+
         if (this.options.autoViewHighlights) {
             this.document = this.options.autoViewHighlights.ownerDocument;
 
-              $(this.options.autoViewHighlights)
-                  .on("click." + NS, '.annotator-hl', function (event) {
-                      // If there are many overlapping highlights, still only
-                      // call _onHighlightMouseover once.
-                      show = !show;
-                      if(show){
-                        if (event.target === this) {
-                            self._onHighlightMouseover(event);
-                        }
-                      }
+            $(this.options.autoViewHighlights)
+                .on("mouseover." + NS, '.annotator-hl', function (event) {
+                    // If there are many overlapping highlights, still only
+                    // call _onHighlightMouseover once.
+                    if (event.target === this) {
+                        self._onHighlightMouseover(event);
+                    }
+                })
+                .on("mouseleave." + NS, '.annotator-hl', function () {
+                    self._startHideTimer();
+                });
 
-                  })
-                  .on("click." + NS, function (e) {
-                      if (e.which === 1) {
-                          self.mouseDown = true;
-                      }
-                  })
-                  .on("click." + NS, function (e) {
-                      if (e.which === 1) {
-                          self.mouseDown = false;
-                      }
-                  });
-
-            $(document).on("click", function () {
-              if(!show){
-                self._startHideTimer();
-              }
-            });
-
+            $(this.document.body)
+                .on("mousedown." + NS, function (e) {
+                    if (e.which === 1) {
+                        self.mouseDown = true;
+                    }
+                })
+                .on("mouseup." + NS, function (e) {
+                    if (e.which === 1) {
+                        self.mouseDown = false;
+                    }
+                });
         }
-        // var show = false;
-          this.element
-              .on("click." + NS, '.annotator-edit', function (e) {
-                  self._onEditClick(e);
-              })
-              .on("click." + NS, '.annotator-delete', function (e) {
-                  self._onDeleteClick(e);
-              })
-        //       .on("click." + NS, function () {
-        //         shown = !shown;
-        //         if(!shown){
-        //           self._startHideTimer();
-        //         }
-        //         else{
-        //           self._clearHideTimer();
-        //         }
-        //       })
 
+        this.element
+            .on("click." + NS, '.annotator-edit', function (e) {
+                self._onEditClick(e);
+            })
+            .on("click." + NS, '.annotator-delete', function (e) {
+                self._onDeleteClick(e);
+            })
+            .on("mouseenter." + NS, function () {
+                self._clearHideTimer();
+            })
+            .on("mouseleave." + NS, function () {
+                self._startHideTimer();
+            });
     },
 
     destroy: function () {
@@ -294,7 +288,7 @@ var Viewer = exports.Viewer = Widget.extend({
         return item;
     },
 
-    // Public: Adds an addional field to an annotation view. A callback can be
+    // Public: Adds an additional field to an annotation view. A callback can be
     // provided to update the view on load.
     //
     // options - An options Object. Options are as follows:
@@ -347,11 +341,13 @@ var Viewer = exports.Viewer = Widget.extend({
     //
     // Returns nothing.
     _onDeleteClick: function (event) {
-        var item = $(event.target)
-            .parents('.annotator-annotation')
-            .data('annotation');
-        this.hide();
-        this.options.onDelete(item);
+        if (window.confirm(_t('Delete this annotation?'))) {
+            var item = $(event.target)
+                .parents('.annotator-annotation')
+                .data('annotation');
+            this.hide();
+            this.options.onDelete(item);
+        }
     },
 
     // Event callback: called when a user triggers `mouseover` on a highlight

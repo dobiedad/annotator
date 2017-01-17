@@ -133,8 +133,8 @@ var Adder = Widget.extend({
 });
 
 Adder.template = [
-    '<div class="annotator-adder btn btn-default annotator-hide">',
-    '  <button type="button ">Annotate</button>',
+    '<div class="annotator-adder annotator-hide">',
+    '  <button type="button" class="btn btn-default">Annotate</button>',
     '</div>'
 ].join('\n');
 

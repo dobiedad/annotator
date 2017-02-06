@@ -9,7 +9,7 @@ var $ = util.$,
 
 var NS = 'annotator-viewer';
 
-
+var shown;
 // Private: simple parser for hypermedia link structure
 //
 // Examples:
@@ -125,6 +125,21 @@ var Viewer = exports.Viewer = Widget.extend({
                     // call _onHighlightMouseover once.
                     if (event.target === this) {
                         self._onHighlightMouseover(event);
+                    }
+                })
+                .on("touchstart." + NS, '.annotator-hl', function (event) {
+                    // If there are many overlapping highlights, still only
+                    // call _onHighlightMouseover once.
+                    if (event.target === this) {
+                      if(!shown){
+                        shown = true;
+                          self._onHighlightMouseover(event,true);
+                      }
+                      else{
+                        shown = false;
+                        self._startHideTimer();
+                      }
+
                     }
                 })
                 .on("mouseleave." + NS, '.annotator-hl', function () {
@@ -356,7 +371,7 @@ var Viewer = exports.Viewer = Widget.extend({
     // event - An Event object.
     //
     // Returns nothing.
-    _onHighlightMouseover: function (event) {
+    _onHighlightMouseover: function (event,touch) {
         // If the mouse button is currently depressed, we're probably trying to
         // make a selection, so we shouldn't show the viewer.
         if (this.mouseDown) {
@@ -375,7 +390,13 @@ var Viewer = exports.Viewer = Widget.extend({
                     .toArray();
 
                 // Now show the viewer with the wanted annotations
-                self.load(annotations, util.mousePosition(event));
+
+                if(touch){
+                  self.load(annotations, util.mousePosition(event,true));
+                }
+                else{
+                  self.load(annotations, util.mousePosition(event));
+                }
             });
     },
 

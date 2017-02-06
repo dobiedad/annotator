@@ -36,12 +36,18 @@ var gettext = (function () {
 // Returns the absolute position of the mouse relative to the top-left rendered
 // corner of the page (taking into account padding/margin/border on the body
 // element as necessary).
-function mousePosition(event) {
+function mousePosition(event,touch) {
     var body = global.document.body;
     var offset = {top: 0, left: 0};
 
     if ($(body).css('position') !== "static") {
         offset = $(body).offset();
+    }
+    if(touch){
+      return {
+          top: event.originalEvent.touches[0].pageY - offset.top,
+          left: event.originalEvent.touches[0].pageX - offset.left
+      };
     }
     return {
         top: event.pageY - offset.top,

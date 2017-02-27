@@ -84,8 +84,15 @@ var Viewer = exports.Viewer = Widget.extend({
         this.mouseDown = false;
         this.render = function (annotation) {
             if (annotation.text) {
+              var analytic = {
+                type: 'annotation_read',
+                annotation: annotation
+              };
               if(options.model){
                 model.speak(annotation.text)
+                if(options.model.annotationAnalytic()){
+                  options.model.annotationAnalytic(analytic)
+                }
               }
                 return util.escapeHtml(annotation.text);
             } else {

@@ -86,6 +86,8 @@ var Viewer = exports.Viewer = Widget.extend({
             if (annotation.text) {
               var analytic = {
                 type: 'annotation_read',
+                category: 'Annotations',
+                action: 'annotation_read',
                 annotation: annotation
               };
               if(options.model){

@@ -90,10 +90,8 @@ var Viewer = exports.Viewer = Widget.extend({
                 annotation: annotation
               };
               if(options.model){
-                model.speak(annotation.text)
-                if(options.model.sendToAnalytics()){
-                  options.model.sendToAnalytics(analytic)
-                }
+                options.model.speak(annotation.text)
+                options.model.sendToAnalytics(analytic)
               }
                 return util.escapeHtml(annotation.text);
             } else {
